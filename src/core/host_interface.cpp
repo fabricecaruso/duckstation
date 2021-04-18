@@ -444,6 +444,7 @@ bool HostInterface::SaveState(const char* filename)
   }
   else
   {
+    System::SaveStateScreenShot(filename);    
     AddFormattedOSDMessage(5.0f, TranslateString("OSDMessage", "State saved to '%s'."), filename);
     stream->Commit();
   }
@@ -908,6 +909,15 @@ std::string HostInterface::GetUserDirectoryRelativePath(const char* format, ...)
   std::string formatted_path = StringUtil::StdStringFromFormatV(format, ap);
   va_end(ap);
 
+  if (strncmp(formatted_path.c_str(), "cheats", 6) == 0)
+      return formatted_path.length() > 6 ? StringUtil ::StdStringFromFormat("%s" FS_OSPATH_SEPARATOR_STR "%s", "/userdata/cheats/duckstation", formatted_path.substr(7).c_str()) : "/userdata/cheats/duckstation";
+
+  if (strncmp(formatted_path.c_str(), "screenshots", 11) == 0)
+    return StringUtil::StdStringFromFormat("%s" FS_OSPATH_SEPARATOR_STR "%s", "/userdata", formatted_path.c_str());
+
+  if (strncmp(formatted_path.c_str(), "savestates", 10) == 0 || strncmp(formatted_path.c_str(), "memcards", 7) == 0)
+    return StringUtil::StdStringFromFormat("%s" FS_OSPATH_SEPARATOR_STR "%s", "/userdata/saves/psx/duckstation", formatted_path.c_str());
+  
   if (m_user_directory.empty())
   {
     return formatted_path;

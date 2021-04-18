@@ -238,7 +238,7 @@ const std::string& GetRunningPath()
 }
 const std::string& GetRunningCode()
 {
-  return s_running_game_code;
+  return s_running_game_title; //s_running_game_code;
 }
 
 const std::string& GetRunningTitle()
@@ -1222,6 +1222,12 @@ bool DoLoadState(ByteStream* state, bool force_software_renderer, bool update_di
 
   g_host_interface->GetAudioStream()->EmptyBuffers();
   return true;
+}
+
+bool SaveStateScreenShot(const char* filename)
+{
+  std::string png_filename = FileSystem::ReplaceExtension(filename, "png");
+  return g_host_interface->GetDisplay()->WriteScreenshotToFile(png_filename.c_str(), true);
 }
 
 bool SaveState(ByteStream* state, u32 screenshot_size /* = 128 */)
